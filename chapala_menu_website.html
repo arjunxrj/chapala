@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapala Mexican Restaurant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+            color: black;
+            line-height: 1.6;
+        }
+
+        /* Header and Navigation */
+        .header {
+            background-color: #FF6B35;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.8;
+        }
+
+        /* Search Bar */
+        .search-container {
+            background-color: #FFF5F2;
+            padding: 2rem 0;
+        }
+
+        .search-box {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #FF6B35;
+            border-radius: 8px;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            margin-bottom: 120px;
+        }
+
+        .menu-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            background-color: #FF6B35;
+            color: white;
+            padding: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+        }
+
+        .menu-items {
+            background-color: #FFF5F2;
+            border-radius: 0 0 8px 8px;
+            padding: 1rem;
+        }
+
+        .menu-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FF6B35;
+        }
+
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: black;
+        }
+
+        .item-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-addons {
+            color: #888;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Order Cart */
+        .order-cart {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FF6B35;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .order-cart.active {
+            transform: translateY(0);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .cart-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .cart-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+        }
+
+        .cart-item-notes {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            background-color: white;
+            color: #FF6B35;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .finalize-btn {
+            width: 100%;
+            background-color: white;
+            color: #FF6B35;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .finalize-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Order Summary Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background-color: #FF6B35;
+            color: white;
+            margin: -2rem -2rem 2rem -2rem;
+            padding: 1.5rem 2rem;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .close {
+            float: right;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #FF6B35;
+                flex-direction: column;
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1rem;
+            }
+
+            .modal-header {
+                margin: -1rem -1rem 1rem -1rem;
+                padding: 1rem;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .cart-indicator {
+            background-color: white;
+            color: #FF6B35;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">Chapala Mexican Restaurant</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#margaritas">Margaritas</a></li>
+                <li><a href="#appetizers">Appetizers</a></li>
+                <li><a href="#tacos">Tacos</a></li>
+                <li><a href="#entrees">Entrees</a></li>
+                <li><a href="#seafood">Seafood</a></li>
+                <li><a href="#breakfast">Breakfast</a></li>
+                <li><a href="#beverages">Beverages</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search menu items..." onkeyup="searchMenu()">
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Specialty Margaritas -->
+        <div class="menu-section" id="margaritas">
+            <h2 class="section-title">Margaritas & Cocktails</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Pepita Salmon', 25.75, 'Salmon filet rubbed with a seasoned pepita crust seared then baked to perfection, served with our pipian verde sauce.')">
+                    <div class="item-header">
+                        <div class="item-name">Pepita Salmon</div>
+                        <div class="item-price">$25.75</div>
+                    </div>
+                    <div class="item-description">Salmon filet rubbed with a seasoned pepita crust seared then baked to perfection, served with our pipian verde sauce.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Fish Tacos', 19.75, 'Soft corn or flour tortillas stuffed with grilled or Pacifico beer battered tilapia fish, topped with our cabbage slaw, chipotle cream sauce, and sliced avocado.')">
+                    <div class="item-header">
+                        <div class="item-name">Fish Tacos</div>
+                        <div class="item-price">$19.75</div>
+                    </div>
+                    <div class="item-description">Soft corn or flour tortillas stuffed with grilled or Pacifico beer battered tilapia fish, topped with our cabbage slaw, chipotle cream sauce, and sliced avocado.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Ancho Chile Salmon', 26.75, 'Salmon filet, marinated with our ancho chile lime sauce then grilled to perfection.')">
+                    <div class="item-header">
+                        <div class="item-name">Ancho Chile Salmon</div>
+                        <div class="item-price">$26.75</div>
+                    </div>
+                    <div class="item-description">Salmon filet, marinated with our ancho chile lime sauce then grilled to perfection.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Camarones al Mojo de Ajo', 23.75, 'Jumbo shrimp simmered in a special sauce, with butter, garlic, green onions, mushrooms and tomatoes.')">
+                    <div class="item-header">
+                        <div class="item-name">Camarones al Mojo de Ajo</div>
+                        <div class="item-price">$23.75</div>
+                    </div>
+                    <div class="item-description">Jumbo shrimp simmered in a special sauce, with butter, garlic, green onions, mushrooms and tomatoes.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakfast -->
+        <div class="menu-section" id="breakfast">
+            <h2 class="section-title">Breakfast</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Huevos Rancheros', 9.95, 'Fried corn tortilla topped with two sunny-side-up eggs covered with our delicious homemade Ranchero sauce.')">
+                    <div class="item-header">
+                        <div class="item-name">Huevos Rancheros</div>
+                        <div class="item-price">$9.95</div>
+                    </div>
+                    <div class="item-description">Fried corn tortilla topped with two sunny-side-up eggs covered with our delicious homemade Ranchero sauce.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Huevos a la Mexicana', 9.95, 'A Mexican breakfast featuring two scrambled eggs with tomatoes, onions and serrano peppers.')">
+                    <div class="item-header">
+                        <div class="item-name">Huevos a la Mexicana</div>
+                        <div class="item-price">$9.95</div>
+                    </div>
+                    <div class="item-description">A Mexican breakfast featuring two scrambled eggs with tomatoes, onions and serrano peppers.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Arrachera and Eggs', 14.95, 'Arrachera beef steak seasoned and cooked to perfection, served with two eggs any style, Mexican potatoes and flour or corn tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Arrachera and Eggs</div>
+                        <div class="item-price">$14.95</div>
+                    </div>
+                    <div class="item-description">Arrachera beef steak seasoned and cooked to perfection, served with two eggs any style, Mexican potatoes and flour or corn tortillas.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Chilaquiles Tradicionales', 8.95, 'Fried pieces of corn tortilla covered with our homemade salsa rojo, topped with Mexican crema, queso fresco and red onions. Served with your choice of refried pinto or black beans.')">
+                    <div class="item-header">
+                        <div class="item-name">Chilaquiles Tradicionales</div>
+                        <div class="item-price">$8.95</div>
+                    </div>
+                    <div class="item-description">Fried pieces of corn tortilla covered with our homemade salsa rojo, topped with Mexican crema, queso fresco and red onions. Served with your choice of refried pinto or black beans.</div>
+                    <div class="item-addons">Add 2 eggs for $3</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Texas Omelette', 10.95, 'Three egg omelette filled with pico de gallo and a blend of Cheddar & Monterrey Jack cheese, topped with chorizo and served with Mexican potatoes.')">
+                    <div class="item-header">
+                        <div class="item-name">Texas Omelette</div>
+                        <div class="item-price">$10.95</div>
+                    </div>
+                    <div class="item-description">Three egg omelette filled with pico de gallo and a blend of Cheddar & Monterrey Jack cheese, topped with chorizo and served with Mexican potatoes.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beverages -->
+        <div class="menu-section" id="beverages">
+            <h2 class="section-title">Beverages</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Fresh Squeezed Lemonade', 3.00, 'Made fresh daily with real lemons.')">
+                    <div class="item-header">
+                        <div class="item-name">Fresh Squeezed Lemonade</div>
+                        <div class="item-price">$3.00</div>
+                    </div>
+                    <div class="item-description">Made fresh daily with real lemons.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Agua Fresca', 3.00, 'Traditional Mexican fruit water.')">
+                    <div class="item-header">
+                        <div class="item-name">Agua Fresca</div>
+                        <div class="item-price">$3.00</div>
+                    </div>
+                    <div class="item-description">Traditional Mexican fruit water.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Mexican Coke', 3.80, 'Half liter Mexican Coca-Cola made with cane sugar.')">
+                    <div class="item-header">
+                        <div class="item-name">Mexican Coke</div>
+                        <div class="item-price">$3.80</div>
+                    </div>
+                    <div class="item-description">Half liter Mexican Coca-Cola made with cane sugar.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Jarritos Mexican Soda', 2.50, 'Traditional Mexican soda in various flavors.')">
+                    <div class="item-header">
+                        <div class="item-name">Jarritos Mexican Soda</div>
+                        <div class="item-price">$2.50</div>
+                    </div>
+                    <div class="item-description">Traditional Mexican soda in various flavors.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('El Carajillo', 8.50, 'Traditional Mexican coffee cocktail.')">
+                    <div class="item-header">
+                        <div class="item-name">El Carajillo</div>
+                        <div class="item-price">$8.50</div>
+                    </div>
+                    <div class="item-description">Traditional Mexican coffee cocktail.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Cart -->
+    <div class="order-cart" id="orderCart">
+        <div class="cart-header">
+            <div class="cart-title">Your Order <span class="cart-indicator" id="cartCount">0</span></div>
+            <button class="cart-toggle" onclick="toggleCart()">−</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-total">
+            <span>Total: $<span id="cartTotal">0.00</span></span>
+        </div>
+        <button class="finalize-btn" onclick="finalizeOrder()">Finalize Order</button>
+    </div>
+
+    <!-- Order Summary Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Order Summary</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="orderSummary"></div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let cartVisible = false;
+
+        function toggleMenu() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        }
+
+        function searchMenu() {
+            const searchInput = document.querySelector('.search-input');
+            const searchTerm = searchInput.value.toLowerCase();
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            menuItems.forEach(item => {
+                const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+                const itemDescription = item.querySelector('.item-description').textContent.toLowerCase();
+                
+                if (itemName.includes(searchTerm) || itemDescription.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function addToCart(name, price, description) {
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    name: name,
+                    price: price,
+                    description: description,
+                    quantity: 1,
+                    notes: ''
+                });
+            }
+            
+            updateCart();
+            showCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartCount = document.getElementById('cartCount');
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="item-details">
+                        <div class="cart-item-name">${item.name} - ${item.price.toFixed(2)}</div>
+                        ${item.notes ? `<div class="cart-item-notes">Note: ${item.notes}</div>` : ''}
+                        <input type="text" class="notes-input" placeholder="Add special instructions..." 
+                               value="${item.notes}" onchange="updateNotes(${index}, this.value)">
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            
+            cartTotal.textContent = total.toFixed(2);
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        function updateNotes(index, notes) {
+            cart[index].notes = notes;
+        }
+
+        function changeQuantity(index, change) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            
+            updateCart();
+            
+            if (cart.length === 0) {
+                hideCart();
+            }
+        }
+
+        function showCart() {
+            const orderCart = document.getElementById('orderCart');
+            orderCart.classList.add('active');
+            cartVisible = true;
+        }
+
+        function hideCart() {
+            const orderCart = document.getElementById('orderCart');
+            orderCart.classList.remove('active');
+            cartVisible = false;
+        }
+
+        function toggleCart() {
+            if (cartVisible) {
+                hideCart();
+            } else {
+                showCart();
+            }
+        }
+
+        function finalizeOrder() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            const modal = document.getElementById('orderModal');
+            const orderSummary = document.getElementById('orderSummary');
+            
+            let summaryHTML = '<h3>Order Details:</h3>';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                summaryHTML += `
+                    <div style="border-bottom: 1px solid #eee; padding: 1rem 0;">
+                        <strong>${item.name}</strong><br>
+                        <small>${item.description}</small><br>
+                        Quantity: ${item.quantity} × ${item.price.toFixed(2)} = ${itemTotal.toFixed(2)}
+                        ${item.notes ? `<br><em>Special instructions: ${item.notes}</em>` : ''}
+                    </div>
+                `;
+            });
+            
+            summaryHTML += `
+                <div style="padding: 1rem 0; font-size: 1.2rem; font-weight: bold;">
+                    <strong>Total: ${total.toFixed(2)}</strong>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button style="background-color: #FF6B35; color: white; border: none; padding: 1rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1rem; margin-right: 1rem;" onclick="submitOrder()">Submit Order</button>
+                    <button style="background-color: #ccc; color: black; border: none; padding: 1rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1rem;" onclick="closeModal()">Continue Shopping</button>
+                </div>
+            `;
+            
+            orderSummary.innerHTML = summaryHTML;
+            modal.style.display = 'block';
+        }
+
+        function submitOrder() {
+            alert('Order submitted successfully! Thank you for dining with Chapala Mexican Restaurant.');
+            cart = [];
+            updateCart();
+            hideCart();
+            closeModal();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('orderModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('orderModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initialize cart display
+        updateCart();
+    </script>
+</body>
+</html> onclick="addToCart('Avocado Margarita', 12.00, 'A blend of fresh avocado, 100% agave silver tequila, agave nectar, fresh lime, and lemon juice.')">
+                    <div class="item-header">
+                        <div class="item-name">Avocado Margarita</div>
+                        <div class="item-price">$12.00</div>
+                    </div>
+                    <div class="item-description">A blend of fresh avocado, 100% agave silver tequila, agave nectar, fresh lime, and lemon juice.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('La Penka', 11.00, '100% agave tequila blanco with prickly pear mix and a little gran gala orange liquor.')">
+                    <div class="item-header">
+                        <div class="item-name">La Penka</div>
+                        <div class="item-price">$11.00</div>
+                    </div>
+                    <div class="item-description">100% agave tequila blanco with prickly pear mix and a little gran gala orange liquor.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Tangorita', 27.00, 'The party starter! A margarita and two mini beers in one big margarita glass. Because it takes 2 to tango!')">
+                    <div class="item-header">
+                        <div class="item-name">Tangorita</div>
+                        <div class="item-price">$27.00</div>
+                    </div>
+                    <div class="item-description">The party starter! A margarita and two mini beers in one big margarita glass. Because it takes 2 to tango! Limit 1 per couple.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('House Margarita', 7.50, 'SERVED FROZEN OR ON THE ROCKS. 100% Agave Tequila, fresh lime juice, agave nectar, orange liqueur.')">
+                    <div class="item-header">
+                        <div class="item-name">House Margarita</div>
+                        <div class="item-price">$7.50</div>
+                    </div>
+                    <div class="item-description">SERVED FROZEN OR ON THE ROCKS. 100% Agave Tequila, fresh lime juice, agave nectar, orange liqueur.</div>
+                    <div class="item-addons">Flavors: Strawberry, Jalapeño, Mango, Coconut, Guava, Peach, Sangria Swirl, Prickly Pear</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Mangonada', 13.00, '100% Agave Tequila, spicy mango mix with chamoy, tajin and fresh lime.')">
+                    <div class="item-header">
+                        <div class="item-name">Mangonada</div>
+                        <div class="item-price">$13.00</div>
+                    </div>
+                    <div class="item-description">100% Agave Tequila, spicy mango mix with chamoy, tajin and fresh lime.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Patio Ritas', 5.00, 'Our small size margaritas.')">
+                    <div class="item-header">
+                        <div class="item-name">Patio Ritas</div>
+                        <div class="item-price">$5.00</div>
+                    </div>
+                    <div class="item-description">Our small size margaritas.</div>
+                    <div class="item-addons">Add flavor $1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appetizers -->
+        <div class="menu-section" id="appetizers">
+            <h2 class="section-title">Appetizers</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Tableside Guacamole', 11.00, 'Served with chicharrones. Made fresh at your table.')">
+                    <div class="item-header">
+                        <div class="item-name">Tableside Guacamole</div>
+                        <div class="item-price">$11.00</div>
+                    </div>
+                    <div class="item-description">Served with chicharrones. Made fresh at your table with ripe avocados, lime, and authentic Mexican spices.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Queso Flameado', 12.00, 'Melted Oaxaca cheese topped with chorizo, grilled peppers & onions. Served flaming with warm flour or corn tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Queso Flameado</div>
+                        <div class="item-price">$12.00</div>
+                    </div>
+                    <div class="item-description">Melted Oaxaca cheese topped with chorizo, grilled peppers & onions. Served flaming with warm flour or corn tortillas.</div>
+                    <div class="item-addons">Substitute chorizo with mushrooms</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Texas Queso', 7.50, 'Yellow queso enhanced with guacamole, pico de gallo, and salsa picante.')">
+                    <div class="item-header">
+                        <div class="item-name">Texas Queso</div>
+                        <div class="item-price">$7.50</div>
+                    </div>
+                    <div class="item-description">Yellow queso enhanced with guacamole, pico de gallo, and salsa picante.</div>
+                    <div class="item-addons">Add ground beef $1.50</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Nachos Tejanos', 10.75, 'Fresh yellow corn chips smothered with refried beans, topped with creamy queso, sour cream, guacamole, pico de gallo, and pickled jalapeño peppers.')">
+                    <div class="item-header">
+                        <div class="item-name">Nachos Tejanos</div>
+                        <div class="item-price">$10.75</div>
+                    </div>
+                    <div class="item-description">Fresh yellow corn chips smothered with refried beans, topped with creamy queso, sour cream, guacamole, pico de gallo, and pickled jalapeño peppers.</div>
+                    <div class="item-addons">Add ground beef $1.50 or chicken tinga $2.00</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Coconut Shrimp', 13.50, 'Hand dipped shrimp, tossed in shredded coconut, then fried till golden brown. Accompanied with a piña guajillo colada sauce for dipping.')">
+                    <div class="item-header">
+                        <div class="item-name">Coconut Shrimp</div>
+                        <div class="item-price">$13.50</div>
+                    </div>
+                    <div class="item-description">Hand dipped shrimp, tossed in shredded coconut, then fried till golden brown. Accompanied with a piña guajillo colada sauce for dipping.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Shrimp Mango Ceviche', 13.00, 'Small shrimp, fresh mango, jicama, serrano peppers, and pico de gallo. Marinated in lime juice and topped with diced avocado.')">
+                    <div class="item-header">
+                        <div class="item-name">Shrimp Mango Ceviche</div>
+                        <div class="item-price">$13.00</div>
+                    </div>
+                    <div class="item-description">Small shrimp, fresh mango, jicama, serrano peppers, and pico de gallo. Marinated in lime juice and topped with diced avocado.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Poblano Quesadilla', 9.50, 'Melted jack and cheddar cheese, roasted poblano peppers, and pico de gallo between two flour tortillas. Served with guacamole and sour cream.')">
+                    <div class="item-header">
+                        <div class="item-name">Poblano Quesadilla</div>
+                        <div class="item-price">$9.50</div>
+                    </div>
+                    <div class="item-description">Melted jack and cheddar cheese, roasted poblano peppers, and pico de gallo between two flour tortillas. Served with guacamole and sour cream.</div>
+                    <div class="item-addons">Add chicken $3, steak $4, or shrimp $4</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tacos -->
+        <div class="menu-section" id="tacos">
+            <h2 class="section-title">Tacos</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Carne Asada Taco', 4.50, 'Broiled, thinly sliced skirt steak, served with grilled jalapeño, green onions and guacamole. Choice of flour or corn tortilla.')">
+                    <div class="item-header">
+                        <div class="item-name">Carne Asada Taco</div>
+                        <div class="item-price">$4.50</div>
+                    </div>
+                    <div class="item-description">Broiled, thinly sliced skirt steak, served with grilled jalapeño, green onions and guacamole. Choice of flour or corn tortilla.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Alambre Taco', 4.50, 'Grilled steak, poblano peppers, bacon, onions and Oaxaca cheese. Choice of flour or corn tortilla.')">
+                    <div class="item-header">
+                        <div class="item-name">Alambre Taco</div>
+                        <div class="item-price">$4.50</div>
+                    </div>
+                    <div class="item-description">Grilled steak, poblano peppers, bacon, onions and Oaxaca cheese. Choice of flour or corn tortilla.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Quesabirria Taco', 4.50, 'Seasoned shredded beef topped with melted cheese. Choice of flour or corn tortilla.')">
+                    <div class="item-header">
+                        <div class="item-name">Quesabirria Taco</div>
+                        <div class="item-price">$4.50</div>
+                    </div>
+                    <div class="item-description">Seasoned shredded beef topped with melted cheese. Choice of flour or corn tortilla.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Gobernador Taco', 5.50, 'Buttery shrimp, onions and bell pepper topped with melted cheese. Choice of flour or corn tortilla.')">
+                    <div class="item-header">
+                        <div class="item-name">Gobernador Taco</div>
+                        <div class="item-price">$5.50</div>
+                    </div>
+                    <div class="item-description">Buttery shrimp, onions and bell pepper topped with melted cheese. Choice of flour or corn tortilla.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Pork Carnitas Taco', 3.50, 'Tender pieces of pork sautéed with onions and grilled. Choice of flour or corn tortilla.')">
+                    <div class="item-header">
+                        <div class="item-name">Pork Carnitas Taco</div>
+                        <div class="item-price">$3.50</div>
+                    </div>
+                    <div class="item-description">Tender pieces of pork sautéed with onions and grilled. Choice of flour or corn tortilla.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Crispy or Soft Taco', 2.00, 'Your choice of chicken tinga or ground beef served with lettuce, tomato and cheese. Flour or Crispy Tortilla.')">
+                    <div class="item-header">
+                        <div class="item-name">Crispy or Soft Taco</div>
+                        <div class="item-price">$2.00</div>
+                    </div>
+                    <div class="item-description">Your choice of chicken tinga or ground beef served with lettuce, tomato and cheese. Flour or Crispy Tortilla.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Entrees -->
+        <div class="menu-section" id="entrees">
+            <h2 class="section-title">Main Entrees</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Steak Fajitas', 24.75, 'A sizzling platter of steak with grilled red and green bell peppers, onion and mushrooms. Served with guacamole, sour cream, pico de gallo, cheese, Mexican rice, choice of beans and tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Steak Fajitas</div>
+                        <div class="item-price">$24.75</div>
+                    </div>
+                    <div class="item-description">A sizzling platter of steak with grilled red and green bell peppers, onion and mushrooms. Served with guacamole, sour cream, pico de gallo, cheese, Mexican rice, choice of beans and tortillas.</div>
+                    <div class="item-addons">For 2: $32.75</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Chicken Fajitas', 20.75, 'A sizzling platter of chicken with grilled red and green bell peppers, onion and mushrooms. Served with guacamole, sour cream, pico de gallo, cheese, Mexican rice, choice of beans and tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Chicken Fajitas</div>
+                        <div class="item-price">$20.75</div>
+                    </div>
+                    <div class="item-description">A sizzling platter of chicken with grilled red and green bell peppers, onion and mushrooms. Served with guacamole, sour cream, pico de gallo, cheese, Mexican rice, choice of beans and tortillas.</div>
+                    <div class="item-addons">For 2: $28.75</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Mole Poblano', 18.75, 'Tender grilled chicken breast simmered in a traditional mole made with Mexican chocolate, peanuts, and a combination of dried chiles.')">
+                    <div class="item-header">
+                        <div class="item-name">Mole Poblano</div>
+                        <div class="item-price">$18.75</div>
+                    </div>
+                    <div class="item-description">Tender grilled chicken breast simmered in a traditional mole made with Mexican chocolate, peanuts, and a combination of dried chiles.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Pork Carnitas', 19.95, 'Tender pulled pork sautéed with onions lime juice and spices. Served with warm tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Pork Carnitas</div>
+                        <div class="item-price">$19.95</div>
+                    </div>
+                    <div class="item-description">Tender pulled pork sautéed with onions lime juice and spices. Served with warm tortillas.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Cochinita Pibil', 19.75, 'A slow roasted pork with achiote spice rub and served with tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Cochinita Pibil</div>
+                        <div class="item-price">$19.75</div>
+                    </div>
+                    <div class="item-description">A slow roasted pork with achiote spice rub and served with tortillas.</div>
+                </div>
+
+                <div class="menu-item" onclick="addToCart('Bone-In Lamb', 23.75, 'Bone-In Lamb, rubbed with spices, pasilla and arbol chiles; then roasted Jalisco Style. Garnished with lime, pico de gallo and warm tortillas.')">
+                    <div class="item-header">
+                        <div class="item-name">Bone-In Lamb</div>
+                        <div class="item-price">$23.75</div>
+                    </div>
+                    <div class="item-description">Bone-In Lamb, rubbed with spices, pasilla and arbol chiles; then roasted Jalisco Style. Garnished with lime, pico de gallo and warm tortillas.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seafood -->
+        <div class="menu-section" id="seafood">
+            <h2 class="section-title">Seafood</h2>
+            <div class="menu-items">
+                <div class="menu-item" onclick="addToCart('Camarones a la Diabla', 23.75, 'Jumbo succulent shrimp, simmered in a spicy Diablo sauce.')">
+                    <div class="item-header">
+                        <div class="item-name">Camarones a la Diabla</div>
+                        <div class="item-price">$23.75</div>
+                    </div>
+                    <div class="item-description">Jumbo succulent shrimp, simmered in a spicy Diablo sauce.</div>
+                </div>
+
+                <div class="menu-item"
